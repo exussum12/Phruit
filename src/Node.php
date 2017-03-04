@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
 namespace exussum12\Phruit;
 
 use InvalidArgumentException;
+use stdClass;
 
 class Node
 {
@@ -9,17 +11,17 @@ class Node
     private $match;
     private $payload;
 
-    public function __construct($match)
+    public function __construct(string $match)
     {
         $this->match = $match;
     }
 
-    public function countChildren()
+    public function countChildren() : int
     {
         return count($this->children);
     }
 
-    public function countNestedChildren()
+    public function countNestedChildren() : int
     {
         $total = 0;
 
@@ -31,7 +33,7 @@ class Node
         return $total;
     }
 
-    public function add($route, callable $payload)
+    public function add(array $route, callable $payload)
     {
         if (empty($route)) {
             $this->payload = $payload;
@@ -50,7 +52,7 @@ class Node
         $this->children[] = $node;
     }
 
-    public function matches($string, $variables)
+    public function matches(string $string, stdClass $variables) : bool
     {
         if (ctype_alnum($this->match)) {
             return $string === $this->match;
@@ -65,10 +67,10 @@ class Node
             }
         }
 
-        return $found;
+        return $found === 1;
     }
 
-    public function route($matches, $variables)
+    public function route(array $matches, stdClass $variables)
     {
         $part = array_shift($matches);
         foreach ($this->children as $child) {
