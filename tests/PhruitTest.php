@@ -52,4 +52,21 @@ class PhruitTest extends TestCase
         $this->assertSame(3, $route->getNode()->countNestedChildren());
         $this->assertSame(1, $route->getNode()->countChildren());
     }
+
+    public function testSamePrefix()
+    {
+
+        $mock = $this->getMockBuilder('route')->setMethods(['notCalled', 'called'])->getMock();
+        $mock ->expects($this->never())->method('notCalled');
+        $mock ->expects($this->once())->method('called');
+
+        $route = new Phruit();
+        $route->add('/users/{name:[a-z]+}', [$mock, 'notCalled']);
+        $route->add('/users/{name:[a-z]+}/{id:[0-9]+}', [$mock, 'called']);
+
+        $route->route('/users/test/123');
+
+        $this->assertSame(3, $route->getNode()->countNestedChildren());
+        $this->assertSame(1, $route->getNode()->countChildren());
+    }
 }

@@ -42,7 +42,7 @@ class Node
         $part = array_shift($route);
         foreach ($this->children as $child) {
             $variables = (object)[];
-            if ($child->matches($part, $variables)) {
+            if ($child->getMatch() === $part) {
                 return $child->add($route, $payload);
             }
         }
@@ -84,5 +84,19 @@ class Node
         }
 
         throw new InvalidArgumentException("Can't find the requested route");
+    }
+
+    public function printDebug($level = 0)
+    {
+        echo str_repeat("\t", $level) . $this->match . "\n";
+        $level++;
+        foreach ($this->children as $child) {
+            $child->printDebug($level);
+        }
+    }
+
+    public function getMatch()
+    {
+        return $this->match;
     }
 }
