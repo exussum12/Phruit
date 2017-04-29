@@ -47,7 +47,7 @@ class Phruit
         }
     }
 
-    public function route(string $route) : callable
+    public function route(string $route, &$variables = []) : callable
     {
         $route = $this->splitRoute($route);
 
@@ -62,7 +62,15 @@ class Phruit
             }
             if (isset($tmp['/dynamic'])) {
                 foreach ($tmp['/dynamic'] as $part => $payload) {
-                    if (preg_match($part, $r)) {
+                    $matches = [];
+                    if (preg_match($part, $r, $matches)) {
+                        $variables = array_merge($variables, array_filter(
+                            $matches,
+                            function ($key) {
+                                return !is_int($key);
+                            },
+                            ARRAY_FILTER_USE_KEY
+                        ));
                         $tmp = $payload;
                         continue 2;
                     }

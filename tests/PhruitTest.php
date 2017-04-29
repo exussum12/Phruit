@@ -50,6 +50,18 @@ class PhruitTest extends TestCase
         $this->assertSame($payload, $route->route('/users/test'));
     }
 
+    public function testVariablesBeingFilled()
+    {
+        $payload = function () {
+        };
+        $route = new Phruit();
+        $route->add('/users/{name:[a-z]+}', $payload);
+        $expected = ['name' => 'test'];
+        $populated = [];
+        $route->route('/users/test', $populated);
+        $this->assertSame($expected, $populated);
+    }
+
     public function testCustom404()
     {
         $notFound = function () {
