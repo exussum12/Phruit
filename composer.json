@@ -1,5 +1,5 @@
 {
-    "name": "exussum12/Phruit",
+    "name": "exussum12/phruit",
     "description": "Tree based routing",
     "require-dev": {
         "phpunit/phpunit": "^6.0"
